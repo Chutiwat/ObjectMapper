@@ -55,6 +55,28 @@ public class Mapper {
         return nil
     }
     
+    public func mapArray<N: MapperProtocol>(JSON: String, to type: N.Type) -> [N]! {
+        var data = JSON.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)
+        
+        if let data = data {
+            var error: NSError?
+            var dict: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &error)
+            
+            if error == nil
+            {
+                if let jsonArray = dict as? [AnyObject] {
+                    var objects = [N]()
+                    
+                    FromJSON<N>().objectArray(&objects, object: jsonArray)
+                    
+                    return objects
+                }
+            }
+        }
+        
+        return nil
+    }
+    
     // map a JSON string to an object Type that conforms to MapperProtocol
     public func map<N: MapperProtocol>(JSON: String, to type: N.Type) -> N! {
         var json = parseJSONString(JSON)
