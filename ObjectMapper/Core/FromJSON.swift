@@ -48,7 +48,14 @@ class FromJSON<CollectionType> {
             case is Bool.Type:
                 field = value as? FieldType
             case is Int.Type:
-                field = value as? FieldType
+                if value is String
+                {
+                    field = (value as String).toInt() as? FieldType
+                }
+                else
+                {
+                    field = value as? FieldType
+                }
             case is Double.Type:
                 field = value as? FieldType
             case is Float.Type:
