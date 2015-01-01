@@ -94,19 +94,23 @@ class FromJSON<CollectionType> {
     func objectArray<N: MapperProtocol>(inout field: Array<N>, object: AnyObject?) {
         var parsedObjects: Array<N> = parseObjectArray(object)
         
-        if parsedObjects.count > 0 {
-            field = parsedObjects
-        }
+//        if parsedObjects.count > 0 {
+//            field = parsedObjects
+//        }
+        
+        field = parsedObjects
     }
     
     func optionalObjectArray<N: MapperProtocol>(inout field: Array<N>?, object: AnyObject?) {
         var parsedObjects: Array<N> = parseObjectArray(object)
 
-        if parsedObjects.count > 0 {
-            field = parsedObjects
-        } else {
-            field = nil
-        }
+//        if parsedObjects.count > 0 {
+//            field = parsedObjects
+//        } else {
+//            field = nil
+//        }
+        
+        field = parsedObjects
     }
     
     // parses a JSON array into an array of objects of type <N: MapperProtocol>
@@ -130,20 +134,24 @@ class FromJSON<CollectionType> {
     func objectDictionary<N: MapperProtocol>(inout field: Dictionary<String, N>, object: AnyObject?) {
         var parsedObjects: Dictionary<String, N> = parseObjectDictionary(object)
         
-        if parsedObjects.count > 0 {
-            field = parsedObjects
-        }
+//        if parsedObjects.count > 0 {
+//            field = parsedObjects
+//        }
+        
+        field = parsedObjects
     }
 
     // parse a dictionary containing Mapable objects to optional field
     func optionalObjectDictionary<N: MapperProtocol>(inout field: Dictionary<String, N>?, object: AnyObject?) {
         var parsedObjects: Dictionary<String, N> = parseObjectDictionary(object)
         
-        if parsedObjects.count > 0 {
-            field = parsedObjects
-        } else {
-            field = nil
-        }
+//        if parsedObjects.count > 0 {
+//            field = parsedObjects
+//        } else {
+//            field = nil
+//        }
+        
+        field = parsedObjects
     }
     
     // parses a JSON Dictionary into an Dictionay of objects of type <N: MapperProtocol>
