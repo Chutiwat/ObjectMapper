@@ -44,7 +44,7 @@ public class Mapper {
     
     // map a JSON string onto an existing object
     public func map<N: MapperProtocol>(JSON: String, to object: N) -> N! {
-        var json = parseJSONString(JSON)
+        var json = Mapper.parseJSONString(JSON)
         if let json = json {
 
             mappingType = .fromJSON
@@ -79,7 +79,7 @@ public class Mapper {
     
     // map a JSON string to an object Type that conforms to MapperProtocol
     public func map<N: MapperProtocol>(JSON: String, to type: N.Type) -> N! {
-        var json = parseJSONString(JSON)
+        var json = Mapper.parseJSONString(JSON)
         if let json = json {
             return map(json, to: type)
         }
@@ -135,7 +135,7 @@ public class Mapper {
     }
     
     // convert a JSON String into a Dictionary<String, AnyObject> using NSJSONSerialization
-    private func parseJSONString(JSON: String) -> [String : AnyObject]! {
+    public class func parseJSONString(JSON: String) -> [String : AnyObject]! {
         var data = JSON.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)
         if let data = data {
             var error: NSError?
