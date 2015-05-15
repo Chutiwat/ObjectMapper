@@ -6,168 +6,81 @@
 //  Copyright (c) 2014 hearst. All rights reserved.
 //
 
-import Foundation
+internal final class FromJSON {
+	
+	/// Basic type
+	class func basicType<FieldType>(inout field: FieldType, object: FieldType?) {
+		if let value = object {
+			field = value
+		}
+	}
 
-class FromJSON<CollectionType> {
-    
-    func baseType<FieldType>(inout field: FieldType, object: AnyObject?) {
-        if let value: AnyObject = object {
-            switch FieldType.self {
-            case is String.Type:
-                field = (value as String) as FieldType
-            case is Bool.Type:
-                field = (value as Bool) as FieldType
-            case is Int.Type:
-                field = (value as Int) as FieldType
-            case is Double.Type:
-                field = (value as Double) as FieldType
-            case is Float.Type:
-                field = (value as Float) as FieldType
-            case is Array<CollectionType>.Type:
-                field = value as FieldType
-            case is Dictionary<String, CollectionType>.Type:
-                field = value as FieldType
-            default:
-				field = value as FieldType
-                return
-            }
-        }
-    }
-    
-    func baseType<FieldType>(inout field: FieldType, object: FieldType?) {
-        if let value: FieldType = object {
-            field = value
-        }
-    }
-    
-    func optionalBaseType<FieldType>(inout field: FieldType?, object: AnyObject?) {
-        if let value: AnyObject = object {
-            switch FieldType.self {
-            case is String.Type:
-                field = value as? FieldType
-            case is Bool.Type:
-                field = value as? FieldType
-            case is Int.Type:
-                if value is String
-                {
-                    field = (value as String).toInt() as? FieldType
-                }
-                else
-                {
-                    field = value as? FieldType
-                }
-            case is Double.Type:
-                field = value as? FieldType
-            case is Float.Type:
-                field = value as? FieldType
-            case is Array<CollectionType>.Type:
-                field = value as? FieldType
-            case is Dictionary<String, CollectionType>.Type:
-                field = value as? FieldType
-            case is NSDate.Type:
-                field = value as? FieldType
-            default:
-				field = value as? FieldType
-                return
-            }
-        }
-    }
-    
-    func optionalBaseType<FieldType>(inout field: FieldType?, object: FieldType?) {
-        if let value: FieldType = object {
-            field = value
-        }
-    }
-    
-    func object<N: MapperProtocol>(inout field: N, object: AnyObject?) {
-        if let value = object as? [String : AnyObject] {
-            field = Mapper().map(value, to: N.self)
-        }
-    }
-    
-    func object<N: MapperProtocol>(inout field: N?, object: AnyObject?) {
-        if let value = object as? [String : AnyObject] {
-            field = Mapper().map(value, to: N.self)
-        }
-    }
-    
-    func objectArray<N: MapperProtocol>(inout field: Array<N>, object: AnyObject?) {
-        var parsedObjects: Array<N> = parseObjectArray(object)
-        
-//        if parsedObjects.count > 0 {
-//            field = parsedObjects
-//        }
-        
-        field = parsedObjects
-    }
-    
-    func optionalObjectArray<N: MapperProtocol>(inout field: Array<N>?, object: AnyObject?) {
-        var parsedObjects: Array<N> = parseObjectArray(object)
+	/// optional basic type
+	class func optionalBasicType<FieldType>(inout field: FieldType?, object: FieldType?) {
+		if let value = object {
+			field = value
+		}
+	}
 
-//        if parsedObjects.count > 0 {
-//            field = parsedObjects
-//        } else {
-//            field = nil
-//        }
-        
-        field = parsedObjects
-    }
-    
-    // parses a JSON array into an array of objects of type <N: MapperProtocol>
-    private func parseObjectArray<N: MapperProtocol>(object: AnyObject?) -> Array<N>{
-        let mapper = Mapper()
-        
-        var parsedObjects = Array<N>()
-        
-        if let array = object as [AnyObject]? {
-            for object in array {
-                let objectJSON = object as [String : AnyObject]
-                var parsedObj = mapper.map(objectJSON, to: N.self)
-                parsedObjects.append(parsedObj)
-            }
-        }
-        
-        return parsedObjects
-    }
-    
-    // parse a dictionary containing Mapable objects
-    func objectDictionary<N: MapperProtocol>(inout field: Dictionary<String, N>, object: AnyObject?) {
-        var parsedObjects: Dictionary<String, N> = parseObjectDictionary(object)
-        
-//        if parsedObjects.count > 0 {
-//            field = parsedObjects
-//        }
-        
-        field = parsedObjects
-    }
+	/// Implicitly unwrapped optional basic type
+	class func optionalBasicType<FieldType>(inout field: FieldType!, object: FieldType?) {
+		if let value = object {
+			field = value
+		}
+	}
 
-    // parse a dictionary containing Mapable objects to optional field
-    func optionalObjectDictionary<N: MapperProtocol>(inout field: Dictionary<String, N>?, object: AnyObject?) {
-        var parsedObjects: Dictionary<String, N> = parseObjectDictionary(object)
-        
-//        if parsedObjects.count > 0 {
-//            field = parsedObjects
-//        } else {
-//            field = nil
-//        }
-        
-        field = parsedObjects
-    }
-    
-    // parses a JSON Dictionary into an Dictionay of objects of type <N: MapperProtocol>
-    private func parseObjectDictionary<N: MapperProtocol>(object: AnyObject?) -> Dictionary<String, N>{
-        let mapper = Mapper()
-        
-        var parsedObjectsDictionary = Dictionary<String, N>()
-        
-        if let dictionary = object as Dictionary<String, AnyObject>? {
-            for (key, object) in dictionary {
-                let objectJSON = object as [String : AnyObject]
-                var parsedObj = mapper.map(objectJSON, to: N.self)
-                parsedObjectsDictionary[key] = parsedObj
-            }
-        }
-        
-        return parsedObjectsDictionary
-    }
+	/// Mappable object
+	class func object<N: Mappable>(inout field: N, object: AnyObject?) {
+		if let value: N = Mapper().map(object) {
+			field = value
+		}
+	}
+
+	/// Optional Mappable Object
+	class func optionalObject<N: Mappable>(inout field: N?, object: AnyObject?) {
+		field = Mapper().map(object)
+	}
+
+	/// Implicitly unwrapped Optional Mappable Object
+	class func optionalObject<N: Mappable>(inout field: N!, object: AnyObject?) {
+		field = Mapper().map(object)
+	}
+
+	/// mappable object array
+	class func objectArray<N: Mappable>(inout field: Array<N>, object: AnyObject?) {
+		let parsedObjects = Mapper<N>().mapArray(object)
+
+		if let objects = parsedObjects {
+			field = objects
+		}
+	}
+
+	/// optional mappable object array
+	class func optionalObjectArray<N: Mappable>(inout field: Array<N>?, object: AnyObject?) {
+		field = Mapper().mapArray(object)
+	}
+
+	/// Implicitly unwrapped optional mappable object array
+	class func optionalObjectArray<N: Mappable>(inout field: Array<N>!, object: AnyObject?) {
+		field = Mapper().mapArray(object)
+	}
+	
+	/// Dctionary containing Mappable objects
+	class func objectDictionary<N: Mappable>(inout field: Dictionary<String, N>, object: AnyObject?) {
+		let parsedObjects = Mapper<N>().mapDictionary(object)
+
+		if let objects = parsedObjects {
+			field = objects
+		}
+	}
+
+	/// Optional dictionary containing Mappable objects
+	class func optionalObjectDictionary<N: Mappable>(inout field: Dictionary<String, N>?, object: AnyObject?) {
+		field = Mapper().mapDictionary(object)
+	}
+
+	/// Implicitly unwrapped Dictionary containing Mappable objects
+	class func optionalObjectDictionary<N: Mappable>(inout field: Dictionary<String, N>!, object: AnyObject?) {
+		field = Mapper().mapDictionary(object)
+	}
 }
