@@ -309,7 +309,7 @@ public final class Mapper<N: Mappable> {
 	/** 
 	* Convert a JSON String into a Dictionary<String, AnyObject> using NSJSONSerialization 
 	*/
-	private func parseJSONDictionary(JSON: String) -> [String : AnyObject]? {
+	public func parseJSONDictionary(JSON: String) -> [String : AnyObject]? {
 		let parsedJSON: AnyObject? = parseJSONString(JSON)
 		return parseJSONDictionary(parsedJSON)
 	}
